@@ -22,9 +22,11 @@ public class ServerThread implements Runnable, MsgType {
             for (Socket socket : socketList.keySet()) {
                 output = socket.getOutputStream();
                 output.write(USER);
+                //System.out.println("ServerThread发送用户上线消息协议:" + USER);
                 String userInfo = "死党" + socketList.get(s) + "加入聊天!";
                 output.write(userInfo.getBytes());
                 output.flush();
+                System.out.println("用户上线提示消息发送完毕，未确认是否收到...");
             }
 
             while (true) {
