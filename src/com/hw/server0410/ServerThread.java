@@ -12,6 +12,10 @@ public class ServerThread implements Runnable, MsgType {
         this.s = s;
         this.socketList = socketList;
     }
+    //把当前在线客户端个数群发给所有在的用户
+    public void sendUser(OutputStream os){
+
+    }
 
     @Override
     public void run() {
@@ -20,12 +24,17 @@ public class ServerThread implements Runnable, MsgType {
             OutputStream output;
 
             for (Socket socket : socketList.keySet()) {
+                System.out.println("用户数量:" + socketList.keySet().size());
                 output = socket.getOutputStream();
                 output.write(USER);
-                //System.out.println("ServerThread发送用户上线消息协议:" + USER);
-                String userInfo = "死党" + socketList.get(s) + "加入聊天!";
-                output.write(userInfo.getBytes());
-                output.flush();
+                int len = socketList.size();
+                output.write(len);
+                for(int i=0;i<len;i++) {
+                    System.out.println("ServerThread发送用户上线消息协议:" + USER);
+                    String userInfo = "死党" + socketList.get(socket) + "加入聊天!";
+                    output.write(userInfo.getBytes());
+                    output.flush();
+                }
                 System.out.println("用户上线提示消息发送完毕，未确认是否收到...");
             }
 
