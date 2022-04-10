@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 
-public class ServerThread implements Runnable {
+public class ServerThread implements Runnable, MsgType {
     private Socket s;
     private HashMap<Socket, Integer> socketList;
     public ServerThread(Socket s, HashMap<Socket, Integer> socketList) {
@@ -21,6 +21,7 @@ public class ServerThread implements Runnable {
 
             for (Socket socket : socketList.keySet()) {
                 output = socket.getOutputStream();
+                output.write(USER);
                 String userInfo = "死党" + socketList.get(s) + "加入聊天!";
                 output.write(userInfo.getBytes());
                 output.flush();
@@ -33,6 +34,7 @@ public class ServerThread implements Runnable {
                 for (Socket socket : socketList.keySet()) {
                     if (socket != this.s) {
                         output = socket.getOutputStream();
+                        output.write(USER);
                         output.write(("死党" + socketList.get(s) + ":" + message).getBytes());
                         output.flush();
                     }
