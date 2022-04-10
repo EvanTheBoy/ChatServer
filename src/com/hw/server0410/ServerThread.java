@@ -34,7 +34,7 @@ public class ServerThread implements Runnable, MsgType {
                 for (Socket socket : socketList.keySet()) {
                     if (socket != this.s) {
                         output = socket.getOutputStream();
-                        output.write(USER);
+                        output.write(GROUP);
                         output.write(("死党" + socketList.get(s) + ":" + message).getBytes());
                         output.flush();
                     }
