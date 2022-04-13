@@ -22,7 +22,7 @@ public class ServerThread implements Runnable, MsgType {
         int len = idList.size();
         os.write(len);
         for (int i = 0; i < len; ++i) {
-            String userInfo = "死党" + idList.get(i) + "加入聊天!" + "\n";
+            String userInfo = "死党" + idList.get(i) + "加入聊天!";
             os.write(userInfo.getBytes());
         }
         os.flush();
