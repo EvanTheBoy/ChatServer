@@ -20,11 +20,19 @@ public class ServerThread implements Runnable, MsgType {
     public void sendUser(OutputStream os) throws Exception {
         //在线好友个数
         int len = idList.size();
+        System.out.println("server = "+len);
         os.write(len);
+        os.flush();
         for (int i = 0; i < len; ++i) {
-            String userInfo = "死党" + idList.get(i);
-            os.write(userInfo.getBytes());
+            String userInfo = "A" + idList.get(i);
+            System.out.println("userInfo = "+userInfo+"  "+i);
+            sendString(os,userInfo);
+            os.flush();
         }
+    }
+    public void sendString(OutputStream os,String msg) throws Exception {
+        String str = msg+"#";
+        os.write(str.getBytes());
         os.flush();
     }
 
