@@ -24,14 +24,15 @@ public class ServerThread implements Runnable, MsgType {
         os.write(len);
         os.flush();
         for (int i = 0; i < len; ++i) {
-            String userInfo = "A" + idList.get(i);
+            String userInfo = "Bro" + " " + idList.get(i);
             System.out.println("userInfo = "+userInfo+"  "+i);
             sendString(os,userInfo);
             os.flush();
         }
     }
-    public void sendString(OutputStream os,String msg) throws Exception {
-        String str = msg+"#";
+
+    public void sendString (OutputStream os,String msg) throws Exception {
+        String str = msg + "#";
         os.write(str.getBytes());
         os.flush();
     }
