@@ -24,7 +24,7 @@ public class ServerThread implements Runnable, MsgType {
         os.write(len);
         os.flush();
         for (int i = 0; i < len; ++i) {
-            String userInfo = "Bro" + " " + idList.get(i);
+            String userInfo = "死党" + idList.get(i);
             System.out.println("userInfo = "+userInfo+"  "+i);
             sendString(os,userInfo);
             os.flush();
