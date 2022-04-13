@@ -3,7 +3,6 @@ package com.hw.server0410;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class ServerThread implements Runnable, MsgType {
         int len = idList.size();
         os.write(len);
         for (int i = 0; i < len; ++i) {
-            String userInfo = "死党" + idList.get(i) + "加入聊天!";
+            String userInfo = "死党" + idList.get(i) + "加入聊天!" + "\n";
             os.write(userInfo.getBytes());
         }
         os.flush();
