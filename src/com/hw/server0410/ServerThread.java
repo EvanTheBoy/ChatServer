@@ -17,7 +17,7 @@ public class ServerThread implements Runnable, MsgType {
     }
 
     //把当前在线客户端个数群发给所有在的用户
-    public void sendUser(OutputStream os) throws Exception{
+    public void sendUser(OutputStream os) throws Exception {
         //在线好友个数
         int len = idList.size();
         os.write(len);
