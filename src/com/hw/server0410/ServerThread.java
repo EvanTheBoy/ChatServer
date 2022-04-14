@@ -70,7 +70,7 @@ public class ServerThread implements Runnable, MsgType {
                     if (socket != this.s) {
                         output = socket.getOutputStream();
                         output.write(GROUP);
-                        output.write(("死党" + socketList.get(s) + ":" + message).getBytes());
+                        output.write(("死党" + socketList.get(s) + ":" + message + "#").getBytes());
                         output.flush();
                     }
                 }
