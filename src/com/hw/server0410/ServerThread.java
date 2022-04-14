@@ -31,7 +31,7 @@ public class ServerThread implements Runnable, MsgType {
         }
     }
 
-    public void sendString(OutputStream os,String msg) throws Exception {
+    public void sendString(OutputStream os, String msg) throws Exception {
         String str = msg + "#";
         os.write(str.getBytes());
         os.flush();
