@@ -26,7 +26,7 @@ public class ServerThread implements Runnable, MsgType {
         for (int i = 0; i < len; ++i) {
             String userInfo = "死党" + idList.get(i);
             System.out.println("userInfo = "+userInfo+"  "+i);
-            sendString(os,userInfo);
+            sendString(os, userInfo);
             os.flush();
         }
     }
@@ -42,7 +42,6 @@ public class ServerThread implements Runnable, MsgType {
         try {
             InputStream input = s.getInputStream();
             OutputStream output;
-
             for (Socket socket : socketList.keySet()) {
                 System.out.println("用户数量:" + socketList.keySet().size());
                 output = socket.getOutputStream();
