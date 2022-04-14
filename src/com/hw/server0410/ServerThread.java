@@ -54,6 +54,7 @@ public class ServerThread implements Runnable, MsgType {
                 byte[] bytes = new byte[1024];
                 int length = input.read(bytes);
                 String message = new String(bytes, 0, length);
+                System.out.println("服务器收到一条消息:" + message);
                 for (Socket socket : socketList.keySet()) {
                     if (socket != this.s) {
                         output = socket.getOutputStream();
