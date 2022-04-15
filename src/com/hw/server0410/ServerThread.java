@@ -37,16 +37,6 @@ public class ServerThread implements Runnable, MsgType {
         os.flush();
     }
 
-//    private String getMsg(InputStream input) throws Exception {
-//        StringBuffer message = new StringBuffer();
-//        int i = 0;
-//        while ((i = input.read()) != '#') {
-//            char c = (char) i;
-//            message.append(c);
-//        }
-//        return new String(message);
-//    }
-
     @Override
     public void run() {
         try {
@@ -69,7 +59,7 @@ public class ServerThread implements Runnable, MsgType {
                     if (socket != this.s) {
                         output = socket.getOutputStream();
                         output.write(GROUP);
-                        output.write(("死党" + socketList.get(s) + ":" + message + "#").getBytes());
+                        output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
                         output.flush();
                     }
                 }
