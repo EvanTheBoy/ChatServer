@@ -31,6 +31,7 @@ public class ServerThread implements Runnable, MsgType {
         }
     }
 
+    //用于循环内部以#对消息进行分割
     public void sendString(OutputStream os, String msg) throws Exception {
         String str = msg + "#";
         os.write(str.getBytes());
