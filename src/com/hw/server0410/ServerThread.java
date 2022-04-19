@@ -1,6 +1,7 @@
 package com.hw.server0410;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
@@ -38,35 +39,38 @@ public class ServerThread implements Runnable, MsgType {
         os.flush();
     }
 
+    private void readGroupMessage(InputStream input, OutputStream output) throws Exception {
+        byte[] bytes = new byte[1024];
+        int length = input.read(bytes);
+        String message = new String(bytes, 0, length);
+        System.out.println("服务器收到一条消息:" + message);
+        for (Socket socket : socketList.keySet()) {
+            if (socket != this.s) {
+                output = socket.getOutputStream();
+                output.write(GROUP);
+                output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
+                output.flush();
+            }
+        }
+    }
+
     @Override
     public void run() {
-        try {
-            InputStream input = s.getInputStream();
-            OutputStream output;
-            for (Socket socket : socketList.keySet()) {
-                System.out.println("用户数量:" + socketList.keySet().size());
-                output = socket.getOutputStream();
-                output.write(USER);
-                sendUser(output);
-                System.out.println("用户上线提示消息发送完毕，未确认是否收到...");
-            }
-
-            while (true) {
-                byte[] bytes = new byte[1024];
-                int length = input.read(bytes);
-                String message = new String(bytes, 0, length);
-                System.out.println("服务器收到一条消息:" + message);
+        while (true) {
+            try {
+                InputStream input = s.getInputStream();
+                OutputStream output = null;
                 for (Socket socket : socketList.keySet()) {
-                    if (socket != this.s) {
-                        output = socket.getOutputStream();
-                        output.write(GROUP);
-                        output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
-                        output.flush();
-                    }
+                    System.out.println("用户数量:" + socketList.keySet().size());
+                    output = socket.getOutputStream();
+                    output.write(USER);
+                    sendUser(output);
+                    System.out.println("用户上线提示消息发送完毕，未确认是否收到...");
                 }
+                readGroupMessage(input, output);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
