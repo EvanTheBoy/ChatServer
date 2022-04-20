@@ -39,7 +39,9 @@ public class ServerThread implements Runnable, MsgType {
         os.flush();
     }
 
-    private void readGroupMessage(InputStream input, OutputStream output) throws Exception {
+    //读取群聊消息，并转发
+    private void handleGroupMessage(InputStream input) throws Exception {
+        OutputStream output;
         byte[] bytes = new byte[1024];
         int length = input.read(bytes);
         String message = new String(bytes, 0, length);
@@ -54,20 +56,38 @@ public class ServerThread implements Runnable, MsgType {
         }
     }
 
+    //向客户端转发上线用户的信息
+    private void transferUserInfo() throws Exception {
+        OutputStream output;
+        for (Socket socket : socketList.keySet()) {
+            System.out.println("用户数量:" + socketList.keySet().size());
+            output = socket.getOutputStream();
+            output.write(USER);
+            sendUser(output);
+            System.out.println("用户上线提示消息发送完毕，未确认是否收到...");
+        }
+    }
+
     @Override
     public void run() {
         while (true) {
             try {
                 InputStream input = s.getInputStream();
-                OutputStream output = null;
-                for (Socket socket : socketList.keySet()) {
-                    System.out.println("用户数量:" + socketList.keySet().size());
-                    output = socket.getOutputStream();
-                    output.write(USER);
-                    sendUser(output);
-                    System.out.println("用户上线提示消息发送完毕，未确认是否收到...");
+                int head = input.read();
+                switch (head) {
+                    case GROUP:
+                        handleGroupMessage(input);
+                        break;
+                    case PRIVATE:
+
+                        break;
+                    case USER:
+                        transferUserInfo();
+                        break;
+                    default:
+                        break;
                 }
-                readGroupMessage(input, output);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
