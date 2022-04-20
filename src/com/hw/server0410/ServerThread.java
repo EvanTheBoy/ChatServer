@@ -56,6 +56,15 @@ public class ServerThread implements Runnable, MsgType {
         }
     }
 
+    private void handlePrivateMessage(InputStream input) throws Exception {
+        OutputStream output;
+        byte[] bytes = new byte[1024];
+        int length = input.read(bytes);
+        String message = new String(bytes, 0, length);
+        System.out.println("服务器收到一条消息:" + message);
+
+    }
+
     //向客户端转发上线用户的信息
     private void transferUserInfo() throws Exception {
         OutputStream output;
