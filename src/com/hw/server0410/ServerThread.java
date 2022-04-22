@@ -1,7 +1,6 @@
 package com.hw.server0410;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
@@ -57,12 +56,22 @@ public class ServerThread implements Runnable, MsgType {
     }
 
     private void handlePrivateMessage(InputStream input) throws Exception {
-        OutputStream output;
+        OutputStream output = null;
+        int id = input.read();
         byte[] bytes = new byte[1024];
         int length = input.read(bytes);
         String message = new String(bytes, 0, length);
         System.out.println("服务器收到一条消息:" + message);
-
+        //在哈希表中找出该id对应的客户，并取得该客户的输出流
+        for (Socket socket : socketList.keySet()) {
+            Socket s = socket;
+            if (socketList.get(s) == id) {
+                output = s.getOutputStream();
+                break;
+            }
+        }
+        output.write(message.getBytes());
+        output.flush();
     }
 
     //向客户端转发上线用户的信息
