@@ -48,6 +48,7 @@ public class ServerThread implements Runnable, MsgType {
         for (Socket socket : socketList.keySet()) {
             if (socket != this.s) {
                 output = socket.getOutputStream();
+                //先发送消息头
                 output.write(GROUP);
                 output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
                 output.flush();
@@ -55,6 +56,7 @@ public class ServerThread implements Runnable, MsgType {
         }
     }
 
+    //接收到客户端发送来的私聊消息，并找到私聊对象转发之
     private void handlePrivateMessage(InputStream input) throws Exception {
         OutputStream output = null;
         int id = input.read();
@@ -70,6 +72,8 @@ public class ServerThread implements Runnable, MsgType {
                 break;
             }
         }
+        //首先发送消息头
+        output.write(PRIVATE);
         output.write(message.getBytes());
         output.flush();
     }
@@ -97,7 +101,7 @@ public class ServerThread implements Runnable, MsgType {
                         handleGroupMessage(input);
                         break;
                     case PRIVATE:
-
+                        handlePrivateMessage(input);
                         break;
                     case USER:
                         transferUserInfo();
