@@ -137,7 +137,6 @@ public class ServerThread implements Runnable, MsgType {
                     default:
                         break;
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
