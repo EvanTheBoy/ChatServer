@@ -45,7 +45,7 @@ public class ServerThread implements Runnable, MsgType {
         byte[] bytes = new byte[1024];
         int length = input.read(bytes);
         String message = new String(bytes, 0, length);
-        System.out.println("服务器收到一条消息:" + message);
+        System.out.println("服务器收到一条群聊消息:" + message);
         for (Socket socket : socketList.keySet()) {
             if (socket != this.s) {
                 output = socket.getOutputStream();
@@ -63,21 +63,29 @@ public class ServerThread implements Runnable, MsgType {
         while ((i = input.read()) != 13) {
             char c = (char) i;
             message.append(c);
-            System.out.println("现在的消息是:" + message);
+            System.out.println("getMessage方法现在得到的消息是message = " + message);
         }
         return new String(message);
+    }
+
+    private String getUserId(InputStreamReader input) throws Exception {
+        StringBuffer id = new StringBuffer();
+        int i = 0;
+        while ((i = input.read()) != 13) {
+            char c = (char) i;
+            id.append(c);
+        }
+        return new String(id);
     }
 
     //接收到客户端发送来的私聊消息，并找到私聊对象转发之
     private void handlePrivateMessage(InputStreamReader input) throws Exception {
         OutputStream output = null;
-        int id = input.read();
-        System.out.println("获取到的私聊对象id是:" + id);
+        String userId = getUserId(input);
+        int id = Integer.parseInt(userId);
+        System.out.println("ServerThread:获取到的私聊对象id是id = " + id);
         String message = getMessage(input);
-//        byte[] bytes = new byte[1024];
-//        int length = input.read(bytes);
-//        String message = new String(bytes, 0, length);
-        System.out.println("服务器收到一条消息:" + message);
+        System.out.println("服务器收到一条私聊消息:" + message);
         //在哈希表中找出该id对应的客户，并取得该客户的输出流
         for (Socket socket : socketList.keySet()) {
             if (socketList.get(socket) == id) {
@@ -115,7 +123,7 @@ public class ServerThread implements Runnable, MsgType {
                 InputStream input = s.getInputStream();
                 InputStreamReader inputReader = new InputStreamReader(s.getInputStream());
                 int head = input.read();
-                System.out.println("当前读到的消息头是:" + head);
+                System.out.println("ServerThread:当前读到的消息头是head = " + head);
                 switch (head) {
                     case GROUP:
                         handleGroupMessage(input);
