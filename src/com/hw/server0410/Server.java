@@ -25,7 +25,7 @@ public class Server {
                 User user = new User();
                 Login_Register lg = new Login_Register();
                 //获取客户的用户名和登录密码
-                lg.initUI();
+                lg.initEnterUI();
                 user.setId(i);
                 idList.add(i);
                 //把它们组成键值对存入表中

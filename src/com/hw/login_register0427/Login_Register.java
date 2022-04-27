@@ -1,13 +1,16 @@
 package com.hw.login_register0427;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Login_Register implements ActionListener {
     private JTextField userID;
     private JPasswordField password;
+    private JRadioButton btn1, btn2, btn3;
     public void initEnterUI() {
         JFrame jf = new JFrame("Login Page");
         jf.setSize(500, 500);
@@ -49,6 +52,38 @@ public class Login_Register implements ActionListener {
         jf.setVisible(true);
     }
 
+    private void initOptionUI() {
+        JFrame frame = new JFrame("选择界面");
+        frame.setSize(250, 120);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+        //设置问题
+        JLabel title = new JLabel();
+        title.setText("请选择你要加入的群聊");
+        JPanel titlePanel = new JPanel();
+        titlePanel.add(title);
+
+        //设置按钮
+        btn1 = new JRadioButton("随缘");
+        btn1.setSelected(true);
+        btn2 = new JRadioButton("1群");
+        btn3 = new JRadioButton("2群");
+        ButtonGroup group = new ButtonGroup();
+        group.add(btn1);
+        group.add(btn2);
+        group.add(btn3);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(btn1);
+        buttonPanel.add(btn2);
+        buttonPanel.add(btn3);
+
+        //最后的界面完成
+        frame.add(titlePanel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+        frame.setVisible(true);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String userName = userID.getText();
@@ -58,6 +93,6 @@ public class Login_Register implements ActionListener {
         user.setUsername(userName);
         Login login = new Login();
         login.setUser(user);
-        
+        initOptionUI();
     }
 }
