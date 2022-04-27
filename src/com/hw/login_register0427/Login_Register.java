@@ -40,7 +40,7 @@ public class Login_Register implements ActionListener {
         jf.add(password);
 
         //登录按钮
-        JButton loginButton = new JButton("Login");
+        JButton loginButton = new JButton("Enter");
         loginButton.setBounds(135, 300, 83, 30);
         loginButton.addActionListener(this);
         jf.add(loginButton);
