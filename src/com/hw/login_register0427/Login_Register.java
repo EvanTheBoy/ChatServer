@@ -1,7 +1,6 @@
 package com.hw.login_register0427;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -9,9 +8,6 @@ import java.util.Arrays;
 public class Login_Register implements ActionListener {
     private JTextField userID;
     private JPasswordField password;
-    private JRadioButton btn1, btn2, btn3;
-    private Container container;
-    private int id = 0;
     public void initUI() {
         JFrame jf = new JFrame("Login Page");
         jf.setSize(500, 500);
@@ -58,15 +54,10 @@ public class Login_Register implements ActionListener {
         String userName = userID.getText();
         String passwd = Arrays.toString(password.getPassword());
         User user = new User();
-        user.setId(++id);
         user.setPassword(passwd);
         user.setUsername(userName);
         Login login = new Login();
         login.setUser(user);
 
-    }
-
-    public static void main(String[] args) {
-        new Login_Register().initUI();
     }
 }
