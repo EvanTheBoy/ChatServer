@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Login_Register implements ActionListener {
     private JTextField userID;
     private JPasswordField password;
-    public void initUI() {
+    public void initEnterUI() {
         JFrame jf = new JFrame("Login Page");
         jf.setSize(500, 500);
         jf.setLayout(null);
@@ -58,6 +58,6 @@ public class Login_Register implements ActionListener {
         user.setUsername(userName);
         Login login = new Login();
         login.setUser(user);
-
+        
     }
 }
