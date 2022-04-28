@@ -26,7 +26,6 @@ public class ServerThread implements Runnable, MsgType {
         os.flush();
         for (int i = 0; i < len; ++i) {
             String userInfo = "死党" + idList.get(i);
-            System.out.println("userInfo = "+userInfo+"  "+i);
             sendString(os, userInfo);
             os.flush();
         }
@@ -40,17 +39,16 @@ public class ServerThread implements Runnable, MsgType {
     }
 
     //读取群聊消息，并转发
-    private void handleGroupMessage(InputStream input) throws Exception {
+    private void handleBroadcastMessage(InputStream input) throws Exception {
         OutputStream output;
         byte[] bytes = new byte[1024];
         int length = input.read(bytes);
         String message = new String(bytes, 0, length);
-        System.out.println("服务器收到一条群聊消息:" + message);
         for (Socket socket : socketList.keySet()) {
             if (socket != this.s) {
                 output = socket.getOutputStream();
                 //先发送消息头
-                output.write(GROUP);
+                output.write(BROADCAST);
                 output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
                 output.flush();
             }
@@ -83,9 +81,7 @@ public class ServerThread implements Runnable, MsgType {
         OutputStream output = null;
         String userId = getUserId(input);
         int id = Integer.parseInt(userId);
-        System.out.println("ServerThread:获取到的私聊对象id是id = " + id);
         String message = getMessage(input);
-        System.out.println("服务器收到一条私聊消息:" + message);
         //在哈希表中找出该id对应的客户，并取得该客户的输出流
         for (Socket socket : socketList.keySet()) {
             if (socketList.get(socket) == id) {
@@ -96,11 +92,40 @@ public class ServerThread implements Runnable, MsgType {
         if (output != null) {
             //首先发送消息头
             output.write(PRIVATE);
-            output.write((message + "\r\n").getBytes());
+            output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
             output.flush();
         } else {
             //socket为空就打印
             System.out.println("Output is null!");
+        }
+    }
+
+    //处理群聊消息
+    private void handleGroupMessage(InputStreamReader input) throws Exception {
+        OutputStream output = null;
+        int myId = socketList.get(s);
+        System.out.println("我的id是:" + myId);
+        if (myId <= 3) {
+            for (Socket socket : socketList.keySet()) {
+                if (socketList.get(socket) <= 3 && socket != s) {
+                    output = socket.getOutputStream();
+                    output.write(GROUP);
+                    String message = getMessage(input);
+                    System.out.println("我要发给:" + socketList.get(socket));
+                    output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
+                    output.flush();
+                }
+            }
+        } else {
+            for (Socket socket : socketList.keySet()) {
+                if (socketList.get(socket) > 3 && socket != s) {
+                    output = socket.getOutputStream();
+                    output.write(GROUP);
+                    String message = getMessage(input);
+                    output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
+                    output.flush();
+                }
+            }
         }
     }
 
@@ -125,8 +150,8 @@ public class ServerThread implements Runnable, MsgType {
                 int head = input.read();
                 System.out.println("ServerThread:当前读到的消息头是head = " + head);
                 switch (head) {
-                    case GROUP:
-                        handleGroupMessage(input);
+                    case BROADCAST:
+                        handleBroadcastMessage(input);
                         break;
                     case PRIVATE:
                         handlePrivateMessage(inputReader);
@@ -134,6 +159,8 @@ public class ServerThread implements Runnable, MsgType {
                     case USER:
                         transferUserInfo();
                         break;
+                    case GROUP:
+                        handleGroupMessage(inputReader);
                     default:
                         break;
                 }
