@@ -105,12 +105,15 @@ public class ServerThread implements Runnable, MsgType {
         OutputStream output = null;
         int myId = socketList.get(s);
         System.out.println("我的id是:" + myId);
+        int i = 0;
+        String message = getMessage(input);
         if (myId <= 3) {
             for (Socket socket : socketList.keySet()) {
                 if (socketList.get(socket) <= 3 && socket != s) {
+                    System.out.println("找到:" + ++i);
                     output = socket.getOutputStream();
                     output.write(GROUP);
-                    String message = getMessage(input);
+                    //String message = getMessage(input);
                     System.out.println("我要发给:" + socketList.get(socket));
                     output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
                     output.flush();
@@ -121,7 +124,7 @@ public class ServerThread implements Runnable, MsgType {
                 if (socketList.get(socket) > 3 && socket != s) {
                     output = socket.getOutputStream();
                     output.write(GROUP);
-                    String message = getMessage(input);
+                    //String message = getMessage(input);
                     output.write(("死党" + socketList.get(s) + ":" + message + "\r\n").getBytes());
                     output.flush();
                 }
